@@ -1,0 +1,11 @@
+1. [FIXED] Player pill flips around when it hits the bottom if it has been rotated
+- Fix:
+  - Check if the pill is flipped before copying it to a board pill. If it is, set the boxes to the opposite of what they were in the player pill
+  - Check it by adding an isFlipped function to the Pill class
+2. [FIXED] Player does not recognize that it has hit the bottom in the left two columns of the board
+3. [FIXED] Vertical players fall one Box to far into the ground when they hit the bottom
+4. [FIXED] Error when matching a vertical line
+"Uncaught TypeError: Cannot read property 'dir' of undefined (board: line 319)"
+5. [FIXED] Horizontal lines on the bottom fall through the floor, but are still recognized as if they were on the floor
+6. Animate the descending of blocks after lines are moved
+7. Horizontal box fall through the floor when the other box in their pill is removed as part of a line
