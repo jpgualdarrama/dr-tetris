@@ -107,7 +107,6 @@ function draw() {
 // TODO: Investigate using matter's physics
 // async function update() {
 function update() {
-  // await board.tick();
   board.tick();
 }
 
