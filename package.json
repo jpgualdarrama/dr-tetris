@@ -1,0 +1,23 @@
+{
+  "name": "dr_tetris",
+  "version": "1.0.0",
+  "description": "Code for a game that mixes some elements of Dr. Mario and Tetris",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "matter-js": "^0.14.2",
+    "p5": "^0.9.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "mario",
+    "doctor",
+    "tetris"
+  ],
+  "author": "Jon Paul Gualdarrama",
+  "license": "ISC"
+}
