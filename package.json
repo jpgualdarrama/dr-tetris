@@ -1,23 +1,29 @@
 {
-  "name": "dr_tetris",
+  "name": "dr-tetris",
   "version": "1.0.0",
-  "description": "Code for a game that mixes some elements of Dr. Mario and Tetris",
+  "description": "A game that combines Dr. Mario and Tetris",
   "main": "server.js",
   "dependencies": {
-    "express": "^4.17.1",
-    "matter-js": "^0.14.2",
-    "p5": "^0.9.0"
+    "express": "^4.17.1"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpgualdarrama/dr-tetris.git"
+  },
   "keywords": [
-    "mario",
-    "doctor",
-    "tetris"
+    "Dr-Mario",
+    "Tetris",
+    "P5"
   ],
   "author": "Jon Paul Gualdarrama",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jpgualdarrama/dr-tetris/issues"
+  },
+  "homepage": "https://github.com/jpgualdarrama/dr-tetris#readme"
 }
