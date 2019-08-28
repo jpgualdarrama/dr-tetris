@@ -94,22 +94,22 @@ class Board {
 
     // one clock tick
     // move pills down by one box (half-pill) if possible
-    // async tick() {
     tick() {
+	this.pill_manager.update();
+	// this.updatePlayer();
+	// this.removeLines();
+	this.updateBlocks();
 	if (BOARD_DEBUG.TICK) {
 	    debug("Board.tick before descend - grid")
 	    debug(this.grid)
 	    debug("Board.tick before descend - pills")
 	    debug(this.pill_manager.pills)
-	    // debug("Board.tick before descend - list of bodies in World")
-	    // debug(Composite.allBodies(world))
 	}
 	
-	this.pill_manager.update();
+    }
+
+    updatePlayer() {
 	this.player_manager.update()
-	
-	// console.log("CRUMB1")
-	// console.log(this.grid.data[1][19])
 	this.setStaticStateForPlayer();
 	this.descendPlayer();
 	if (this.player_manager.exists() &&
@@ -117,34 +117,21 @@ class Board {
 	    this.convertPlayerToBoardPill();
 	    this.createPlayerPill();
 	}
+    }
 
-	// console.log("CRUMB2")
-	// console.log(this.grid.data[1][19])
-	
-	this.removeLines();
-
-	// console.log("CRUMB3")
-	// console.log(this.grid.data[1][19])
-	// this.setStaticStateForBlocks();
-	// this.descendBlocks()
-	// 
-	// if (BOARD_DEBUG.TICK) {
-	//     debug("Board.tick after descend - grid")
-	//     debug(this.grid)
-	//     debug("Board.tick after descend - pills")
-	//     debug(this.pill_manager.pills)
-	//     // debug("Board.tick after descend - list of bodies in World")
-	//     // debug(Composite.allBodies(world))
-	// }
+    updateBlocks() {
+	this.setStaticStateForBlocks();
+	this.descendBlocks();
     }
 
     setStaticStateIfAtBottom(pill) {
-	const pill_at_bottom = (this.atBottom(pill.bottomLeft().y));
+	if(BOARD_DEBUG.SET_STATIC_STATE_IF_AT_BOTTOM) {
+	    debug("Board.setStaticStateIfAtBottom");
+	}
+	const pill_at_bottom = (this.atBottom(pill.bottomLeft()));
 	const pill_is_static = (pill.isStatic());
-
-	if (BOARD_DEBUG.SET_STATIC_STATE_FOR_PILL) {
-	    debug("Board.setStaticStateIfAtBottom")
-	    debug("Pill at bottom?", pill_at_bottom, ", Pill is static?", pill_is_static)
+	if(BOARD_DEBUG.SET_STATIC_STATE_IF_AT_BOTTOM) {
+	    debug("Pill at bottom?=", pill_at_bottom, ", Pill is static?=", pill_is_static)
 	}
 
 	if (pill_at_bottom && !pill_is_static) {
@@ -182,6 +169,9 @@ class Board {
     // this function breaks out the setting of the isStatic field
     // into its own function
     setStaticStateForBlocks() {
+	if(BOARD_DEBUG.SET_STATIC_STATE_FOR_BLOCKS) {
+	    debug("Board.setStaticStateForBlocks()");
+	}
 	// Keep track of the pills that are checked, so that when we get
 	// to the second block (upper for vertical, right for horizontal)
 	// we don't recheck it
@@ -195,20 +185,41 @@ class Board {
 	// not static before they are checked
 	for (var r = this.grid.properties.divisions.y - 1; r >= 0; r--) {
 	    for (var c = 0; c <= this.grid.properties.divisions.x - 2; c++) {
+		if(BOARD_DEBUG.SET_STATIC_STATE_FOR_BLOCKS) {
+		    debug("SET_STATIC_BLOCKS = [c=", c, "][r=", r, "]");
+		}
 		// if there's no pill at this location, just move on
 		if (!this.grid.cellContainsBox(c, r)) {
+		    if(BOARD_DEBUG.SET_STATIC_STATE_FOR_BLOCKS) {
+			debug("SET_STATIC_BLOCKS = No pill at [c=", c, "][r=", r, "]");
+		    }
 		    continue;
 		}
 
 		var pill_index_at_ij = this.grid.get(c, r, 'index');
 		if (pill_indices_checked.check(pill_index_at_ij)) {
+		    if(BOARD_DEBUG.SET_STATIC_STATE_FOR_BLOCKS) {
+			debug("SET_STATIC_BLOCKS = PILL ALREADY MOVED");
+		    }
 		    continue;
 		}
 
+		if(BOARD_DEBUG.SET_STATIC_STATE_FOR_BLOCKS) {
+		    debug("SET_STATIC_BLOCKS = PILL STATIC STATE BEFORE IF AT BOTTOM=",
+			  this.pill_manager.getPill(pill_index_at_ij).isStatic());
+		}
 		this.setStaticStateIfAtBottom(this.pill_manager.getPill(pill_index_at_ij));
+		if(BOARD_DEBUG.SET_STATIC_STATE_FOR_BLOCKS) {
+		    debug("SET_STATIC_BLOCKS = PILL STATIC STATE AFTER IF AT BOTTOM=",
+			  this.pill_manager.getPill(pill_index_at_ij).isStatic());
+		}
 		// only try setting it if the first function didn't set it
 		if (!this.pill_manager.isStatic(pill_index_at_ij)) {
 		    this.setStaticStateIfBelowAreStatic(c, r);
+		}
+		if(BOARD_DEBUG.SET_STATIC_STATE_FOR_BLOCKS) {
+		    debug("SET_STATIC_BLOCKS = PILL STATIC STATE AT END=",
+			  this.pill_manager.getPill(pill_index_at_ij).isStatic());
 		}
 	    } // for var c
 	} // for var r
@@ -279,8 +290,8 @@ class Board {
 	// use this object as the grid to store the updated boxes until the end
 	var new_grid = this.grid.copy();
 
-	// check each row above the last row for blocks that should descend
-	for (var r = this.grid.properties.divisions.y - 2; r >= 0; r--) {
+	// check each row for blocks that should descend
+	for (var r = this.grid.properties.divisions.y - 1; r >= 0; r--) {
 	    for (var c = 0; c <= this.grid.properties.divisions.x - 2; c++) {
 		// don't do anything if there's no pill at [c][r]
 		if(!this.grid.cellContainsBox(c, r)) {
@@ -303,9 +314,15 @@ class Board {
 		// this will always get to the lower box of a vertical pill first.
 		// for that reason, it is okay to just check the box right below
 		// [c][r]
-		var descend = (this.pill_manager.isHorizontal(pill_index_at_ij)) ? this.canHorizontalPillDescend(c, r) :
-		    (this.pill_manager.isVertical(pill_index_at_ij)) ? this.canVerticalPillDescend(c, r) :
+		var descend = (this.pill_manager.isHorizontal(pill_index_at_ij)) ?
+		    this.canHorizontalPillDescend(c, r) :
+		    (this.pill_manager.isVertical(pill_index_at_ij)) ?
+		    this.canVerticalPillDescend(c, r) :
 		    false;
+
+		if (BOARD_DEBUG.DESCEND_BLOCKS) {
+		    debug("LOOP - DESCEND=", descend);
+		}
 
 		if(!descend) { continue; }
 
@@ -440,7 +457,7 @@ class Board {
 	}
 	// console.log("pill_index=", pill_index)
 	const box = this.pill_manager.getBox(pill_index, box_id);
-	const box_at_bottom = (box !== undefined && this.atBottom(box.bottomLeft().y));
+	const box_at_bottom = (box !== undefined && this.atBottom(box.bottomLeft()));
 	return box_at_bottom;
     }
 

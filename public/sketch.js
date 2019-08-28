@@ -64,7 +64,7 @@ function setup() {
   board = new Board(BOARD_WIDTH, BOARD_HEIGHT, NUM_PILL_X, NUM_PILL_Y);
 
   setInitialPills();
-  createPlayer();
+  // createPlayer();
 }
 
 function setInitialPills() {
@@ -74,12 +74,9 @@ function setInitialPills() {
   board.addPill(0, 18, Direction.Horizontal,
     pill_colors[GREEN_INDEX],
     pill_colors[GREEN_INDEX]);
-  board.addPill(1, 16, Direction.Vertical,
-    pill_colors[GREEN_INDEX],
-    pill_colors[GREEN_INDEX]);
-  // board.addPill(1, 19, Direction.Horizontal,
-    // pill_colors[GREEN_INDEX],
-    // pill_colors[BLUE_INDEX]);
+////   board.addPill(1, 16, Direction.Vertical,
+////     pill_colors[GREEN_INDEX],
+////     pill_colors[GREEN_INDEX]);
 }
 
 function createPlayer() {
@@ -91,11 +88,9 @@ function createPlayer() {
   board.createPlayerPill(dir, colors[0], colors[1]);
 }
 
-// async function draw() {
 function draw() {
   background(220);
   if (PLAY && !draw_only) {
-    // await update();
     update();
   }
   board.draw();

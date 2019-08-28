@@ -5,12 +5,13 @@ const SKETCH = {
 
 const BOARD_DEBUG = {
   CONSTRUCTOR: false,
-  ADD_PILL: true,
+  ADD_PILL: false,
   CREATE_PLAYER_PILL: false,
   DRAW: false,
   TICK: true,
-  SET_STATIC_STATE_FOR_BLOCKS: false,
+    SET_STATIC_STATE_FOR_BLOCKS: false,
   SET_STATIC_STATE_FOR_PLAYER: false,
+    SET_STATIC_STATE_IF_AT_BOTTOM: false,
   DESCEND_BLOCKS: false,
   DESCEND_BOARD_PILL: false,
   CALCULATE_LINES: false,

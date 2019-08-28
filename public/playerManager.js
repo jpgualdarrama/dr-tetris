@@ -49,11 +49,13 @@ class PlayerManager {
   }
   
   descend() {
-	  this.player.descend()
+    if(this.player === undefined) { return; }
+    this.player.descend()
   }
   
   update() {
-	  this.player.update();
+    if(this.player === undefined) { return; }
+    this.player.update();
   }
   
   removePlayer() {
