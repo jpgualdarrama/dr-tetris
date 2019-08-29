@@ -74,9 +74,9 @@ function setInitialPills() {
   board.addPill(0, 18, Direction.Horizontal,
     pill_colors[GREEN_INDEX],
     pill_colors[GREEN_INDEX]);
-////   board.addPill(1, 16, Direction.Vertical,
-////     pill_colors[GREEN_INDEX],
-////     pill_colors[GREEN_INDEX]);
+  board.addPill(1, 16, Direction.Vertical,
+    pill_colors[GREEN_INDEX],
+    pill_colors[GREEN_INDEX]);
 }
 
 function createPlayer() {

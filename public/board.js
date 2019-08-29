@@ -95,7 +95,7 @@ class Board {
     // one clock tick
     // move pills down by one box (half-pill) if possible
     tick() {
-	this.pill_manager.update();
+	// this.pill_manager.update();
 	// this.updatePlayer();
 	// this.removeLines();
 	this.updateBlocks();
@@ -140,6 +140,9 @@ class Board {
     } // setStaticStateIfAtBottom
 
     setStaticStateIfBelowAreStatic(c, r, pill) {
+	if(BOARD_DEBUG.SET_STATIC_STATE_IF_BELOW_ARE_STATIC) {
+	    debug("Board.setStaticStateIfBelowAreStatic")
+	}
 	if (!this.grid.cellContainsBox(c, r)) {
 	    return;
 	}
@@ -153,6 +156,11 @@ class Board {
 	    pill = this.pill_manager.getPill(pill_index_at_ij);
 	}
 	pill.setStatic(false);
+	if(BOARD_DEBUG.SET_STATIC_STATE_IF_BELOW_ARE_STATIC) {
+	    debug("Indices below [c=", c, "][r=", r, "] = ")
+	    debug(indices_below_player);
+	}
+
 	for (var i = 0; i < indices_below_player.length; i++) {
 	    var pill_below_index = indices_below_player[i];
 	    if (pill_below_index > -1) {
@@ -185,21 +193,18 @@ class Board {
 	// not static before they are checked
 	for (var r = this.grid.properties.divisions.y - 1; r >= 0; r--) {
 	    for (var c = 0; c <= this.grid.properties.divisions.x - 2; c++) {
-		if(BOARD_DEBUG.SET_STATIC_STATE_FOR_BLOCKS) {
-		    debug("SET_STATIC_BLOCKS = [c=", c, "][r=", r, "]");
-		}
 		// if there's no pill at this location, just move on
 		if (!this.grid.cellContainsBox(c, r)) {
-		    if(BOARD_DEBUG.SET_STATIC_STATE_FOR_BLOCKS) {
-			debug("SET_STATIC_BLOCKS = No pill at [c=", c, "][r=", r, "]");
-		    }
 		    continue;
 		}
 
+		if(BOARD_DEBUG.SET_STATIC_STATE_FOR_BLOCKS) {
+		    debug("SET_STATIC_BLOCKS = [c=", c, "][r=", r, "]");
+		}
 		var pill_index_at_ij = this.grid.get(c, r, 'index');
 		if (pill_indices_checked.check(pill_index_at_ij)) {
 		    if(BOARD_DEBUG.SET_STATIC_STATE_FOR_BLOCKS) {
-			debug("SET_STATIC_BLOCKS = PILL ALREADY MOVED");
+			debug("SET_STATIC_BLOCKS = PILL STATIC STATE ALREADY SET");
 		    }
 		    continue;
 		}
@@ -273,7 +278,8 @@ class Board {
 	var pill_exists_below_current = this.grid.cellContainsBox(c, r + 1);
 	var pill_below_is_current = this.pillBelowIsCurrent(c, r);
 	var pill_below_is_static = this.pillBelowIsStatic(c, r);
-	return pill_exists_below_current && !pill_below_is_current && !pill_below_is_static && !pill_is_static;
+	return pill_exists_below_current && !pill_below_is_current
+	    && !pill_below_is_static && !pill_is_static;
     } // canVerticalPillDescend
 
     // this method descends blocks by one block until no more blocks

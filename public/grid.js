@@ -313,20 +313,44 @@ class Grid {
     }
 
     getPillIndicesBelow(c, r) {
-	const dir = this.data[c][r].dir;
+	const dir = this.data[c][r].direction;
+
+	if(GRID_DEBUG.GET_PILL_INDICES_BELOW) {
+	    debug("Grid.getPillIndicesBelow(c=", c, ",r=", r,
+		  ") - data[c][r] =");
+	    debug(this.data[c][r]);
+	}
 
 	if(!this.validCell(c, r+1)) {
+	    if(GRID_DEBUG.GET_PILL_INDICES_BELOW) {
+		debug("Grid.getPillIndicesBelow(c=", c, ",r=", r,
+		      ") - [c=", c, "][r+1=", (r+1), "] not a valid cell");
+	    }
 	    return [];
 	}
 
 	const pill_index_below_ij = this.get(c, r + 1).index
+	if(GRID_DEBUG.GET_PILL_INDICES_BELOW) {
+	    debug("pill_index_below_ij = ", pill_index_below_ij);
+	}
 
 	var indices_below_player = [];
 	if (dir === Direction.Horizontal) {
 	    indices_below_player.push(pill_index_below_ij);
+	    if(GRID_DEBUG.GET_PILL_INDICES_BELOW) {
+		debug("indices_below_player = ");
+		debug(indices_below_player);
+	    }
 	    if(this.validCell(c+1, r+1)) {
 		const pill_index_below_right = this.get(c + 1, r + 1).index
+		if(GRID_DEBUG.GET_PILL_INDICES_BELOW) {
+		    debug("pill_index_below_right = ", pill_index_below_right);
+		}
 		indices_below_player.push(pill_index_below_right);
+		if(GRID_DEBUG.GET_PILL_INDICES_BELOW) {
+		    debug("indices_below_player = ");
+		    debug(indices_below_player);
+		}
 	    }
 	} else if (dir === Direction.Vertical) {
 	    indices_below_player.push(pill_index_below_ij);
