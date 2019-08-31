@@ -147,13 +147,14 @@ function keyPressed() {
   } else if (keyCode == 68) { // d
       debug_checkbox.checked(!debug_checkbox.checked());
       DEBUGGING = debug_checkbox.checked();
+  } else if (keyCode == 82) { // r
+      this.resetGame();
   }
   return false;
 }
 
 function resetGame() {
   board.reset();
-  this.pills = [];
   setInitialPills();
 
   debug_checkbox.checked(false);

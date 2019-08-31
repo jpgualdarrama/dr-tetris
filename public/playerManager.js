@@ -96,4 +96,9 @@ class PlayerManager {
   draw() {
 	  this.player.draw();
   }
+
+    reset() {
+	this.player.removeFromWorld();
+	this.player = undefined;
+    }
 }

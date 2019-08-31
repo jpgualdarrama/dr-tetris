@@ -93,6 +93,9 @@ class PillManager {
     }
 
     reset() {
+	for(var i = 0; i < this.pills.length; i++) {
+	    this.pills[i].removeFromWorld();
+	}
 	this.pills = [];
     }
 }

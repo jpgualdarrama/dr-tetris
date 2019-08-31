@@ -53,6 +53,15 @@ class Grid {
 	    }
 	}
 	this.data = [];
+	this.initializeData(x_divisions, y_divisions);
+    }
+
+    static create(x_divisions, y_divisions, x_width, y_height) {
+	return new Grid(x_divisions, y_divisions, x_width, y_height);
+    }
+
+    initializeData(x_divisions, y_divisions) {
+	this.data = [];
 	for (var i = 0; i < x_divisions; i++) {
 	    var tmp = [];
 	    for (var j = 0; j < y_divisions; j++) {
@@ -60,10 +69,6 @@ class Grid {
 	    }
 	    this.data.push(tmp);
 	}
-    }
-
-    static create(x_divisions, y_divisions, x_width, y_height) {
-	return new Grid(x_divisions, y_divisions, x_width, y_height);
     }
 
     validColumn(c) {
@@ -412,6 +417,7 @@ class Grid {
     }
 
     reset() {
-	this.data = [];
+	this.initializeData(this.properties.divisions.x,
+			    this.properties.divisions.y);
     }
 }

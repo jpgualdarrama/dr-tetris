@@ -641,8 +641,11 @@ class Board {
     }
 
     reset() {
+	this.player_manager.reset();
+	this.createPlayerPill();
+
 	this.pill_manager.reset()
+
 	this.grid.reset();
-	// console.log("TODO")
     }
 }
