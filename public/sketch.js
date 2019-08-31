@@ -64,19 +64,19 @@ function setup() {
   board = new Board(BOARD_WIDTH, BOARD_HEIGHT, NUM_PILL_X, NUM_PILL_Y);
 
   setInitialPills();
-  // createPlayer();
+  createPlayer();
 }
 
 function setInitialPills() {
-  board.addPill(0, 19, Direction.Horizontal,
-    pill_colors[GREEN_INDEX],
-    pill_colors[GREEN_INDEX])
-  board.addPill(0, 18, Direction.Horizontal,
-    pill_colors[GREEN_INDEX],
-    pill_colors[GREEN_INDEX]);
-  board.addPill(1, 16, Direction.Vertical,
-    pill_colors[GREEN_INDEX],
-    pill_colors[GREEN_INDEX]);
+//   board.addPill(0, 19, Direction.Horizontal,
+//     pill_colors[GREEN_INDEX],
+//     pill_colors[GREEN_INDEX])
+//   board.addPill(0, 18, Direction.Horizontal,
+//     pill_colors[GREEN_INDEX],
+//     pill_colors[GREEN_INDEX]);
+//   board.addPill(1, 16, Direction.Vertical,
+//     pill_colors[GREEN_INDEX],
+//     pill_colors[GREEN_INDEX]);
 }
 
 function createPlayer() {
@@ -128,7 +128,7 @@ function keyPressed() {
     } else if (keyCode === 65) { // a
       this.board.rotatePlayerCounterClockwise();
       moved = true
-    } else if (keyCode === 68) { // d
+    } else if (keyCode === 83) { // s
       this.board.rotatePlayerClockwise();
       moved = true
     }
@@ -139,6 +139,14 @@ function keyPressed() {
       redraw();
       draw_only = false;
     }
+  }
+
+  if (keyCode === 80) { // p
+      play_checkbox.checked(!play_checkbox.checked());
+      PLAY = play_checkbox.checked();
+  } else if (keyCode == 68) { // d
+      debug_checkbox.checked(!debug_checkbox.checked());
+      DEBUGGING = debug_checkbox.checked();
   }
   return false;
 }

@@ -312,8 +312,15 @@ class Grid {
 	}
     }
 
-    getPillIndicesBelow(c, r) {
-	const dir = this.data[c][r].direction;
+    // Two modes:
+    // 1. Just pass (c, r) - looks up direction from this.data[c][r]
+    // 2. Pass (c, r, dir) - intended for use when looking up grid
+    //    indices below the player, which is not part of the grid,
+    //    so its direction cannot be looked up
+    getPillIndicesBelow(c, r, dir) {
+	if(dir === undefined) {
+	    dir = this.data[c][r].direction;
+	}
 
 	if(GRID_DEBUG.GET_PILL_INDICES_BELOW) {
 	    debug("Grid.getPillIndicesBelow(c=", c, ",r=", r,

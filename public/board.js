@@ -96,7 +96,7 @@ class Board {
     // move pills down by one box (half-pill) if possible
     tick() {
 	// this.pill_manager.update();
-	// this.updatePlayer();
+	this.updatePlayer();
 	// this.removeLines();
 	this.updateBlocks();
 	if (BOARD_DEBUG.TICK) {
@@ -143,18 +143,19 @@ class Board {
 	if(BOARD_DEBUG.SET_STATIC_STATE_IF_BELOW_ARE_STATIC) {
 	    debug("Board.setStaticStateIfBelowAreStatic")
 	}
-	if (!this.grid.cellContainsBox(c, r)) {
-	    return;
+	
+	var indices_below_player;
+	if (pill === undefined) {
+	    if (!this.grid.cellContainsBox(c, r)) { return }
+	    const pill_index_at_ij = this.grid.get(c, r, 'index')
+	    pill = this.pill_manager.getPill(pill_index_at_ij);
+	    indices_below_player = this.grid.getPillIndicesBelow(c, r);
+	} else {
+	    indices_below_player = this.grid.getPillIndicesBelow(c, r, pill.dir);
 	}
-
-	var pill_index_at_ij = this.grid.get(c, r, 'index')
-	var indices_below_player = this.grid.getPillIndicesBelow(c, r);
 	// Set the static flag to false initially so any changes
 	// in the loop so no extra checking will have to be done
 	// after the loop.
-	if (pill === undefined) {
-	    pill = this.pill_manager.getPill(pill_index_at_ij);
-	}
 	pill.setStatic(false);
 	if(BOARD_DEBUG.SET_STATIC_STATE_IF_BELOW_ARE_STATIC) {
 	    debug("Indices below [c=", c, "][r=", r, "] = ")
@@ -234,20 +235,36 @@ class Board {
     // this function breaks out the setting of the isStatic field
     // into its own function
     setStaticStateForPlayer() {
-	if (!this.player_manager.exists()) {
-	    return
+	if(BOARD_DEBUG.SET_STATIC_STATE_FOR_PLAYER) {
+	    debug("Board.setStaticStateForPlayer");
 	}
+	
+	if(BOARD_DEBUG.SET_STATIC_STATE_FOR_PLAYER) {
+	    debug("SET_STATIC_PLAYER = PLAYER STATIC STATE BEFORE IF AT BOTTOM=",
+		  this.player_manager.player.isStatic());
+	}
+	
+	if (!this.player_manager.exists()) { return }
 
 	this.setStaticStateIfAtBottom(this.player_manager.player);
-	if (this.player_manager.isStatic()) {
-	    return;
+	if(BOARD_DEBUG.SET_STATIC_STATE_FOR_PLAYER) {
+	    debug("SET_STATIC_PLAYER = PLAYER STATIC STATE AFTER IF AT BOTTOM=",
+		  this.player_manager.player.isStatic());
 	}
+	
+	if (this.player_manager.isStatic()) { return }
 
 	// check if the pills below the player are static
-	var player_c = this.grid.xPositionToColumn(this.player_manager.topLeft().x)
-	var player_r = this.grid.yPositionToRow(this.player_manager.topLeft().y);
+	var player_c = this.grid.xPositionToColumn(this.player_manager.bottomLeft().x)
+	var player_r = this.grid.yPositionToRow(this.player_manager.bottomLeft().y);
 
-	this.setStaticStateIfBelowAreStatic(player_c, player_r, this.player_manager.player);
+	this.setStaticStateIfBelowAreStatic(player_c, player_r-1, this.player_manager.player);
+
+	if(BOARD_DEBUG.SET_STATIC_STATE_FOR_PLAYER) {
+	    debug("SET_STATIC_PLAYER = PLAYER STATIC STATE AT END=",
+		  this.player_manager.player.isStatic());
+	}
+
     } // setStaticStateForPlayer
 
     canHorizontalPillDescend(c, r) {
@@ -598,6 +615,7 @@ class Board {
 	this.player_manager.removePlayer();
 	this.addPill(player_c, player_r, player_dir,
 		     player_c1, player_c2);
+	
     }
 
     movePlayerLeft() {

@@ -43,6 +43,14 @@ class PlayerManager {
   topLeft() {
 	  return this.player.topLeft();
   }
+
+  bottomLeft() {
+    return this.player.bottomLeft();
+  }
+
+  topRight() {
+    return this.player.topRight();
+  }
   
   bottomRight() {
 	  return this.player.bottomRight();
