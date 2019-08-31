@@ -95,10 +95,9 @@ class Board {
     // one clock tick
     // move pills down by one box (half-pill) if possible
     tick() {
-	// this.pill_manager.update();
+	this.updateBlocks();
 	this.updatePlayer();
 	// this.removeLines();
-	this.updateBlocks();
 	if (BOARD_DEBUG.TICK) {
 	    debug("Board.tick before descend - grid")
 	    debug(this.grid)
@@ -120,6 +119,7 @@ class Board {
     }
 
     updateBlocks() {
+	this.pill_manager.update();
 	this.setStaticStateForBlocks();
 	this.descendBlocks();
     }

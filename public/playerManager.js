@@ -67,15 +67,17 @@ class PlayerManager {
   }
   
   removePlayer() {
-	  this.player.removeFromWorld()
-	  this.player = undefined;
+      this.player.removeFromWorld()
+      this.player = undefined;
   }
 	
   moveLeft() {
-    this.player.moveLeft(this.sizes.box.w);
+      const w = this.pill_sizes[this.player.dir].w;
+      this.player.moveLeft(w);
   }
   moveRight() {
-	  this.player.moveRight(this.sizes.box.w);
+      const w = this.pill_sizes[this.player.dir].w;
+      this.player.moveRight(w);
   }
 	
   rotateClockwise() {
