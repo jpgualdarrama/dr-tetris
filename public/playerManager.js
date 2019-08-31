@@ -12,6 +12,11 @@ class PlayerManager {
       w: box_width,
       h: box_height * 2
     }
+
+      this.box_sizes = {
+	  w: box_width,
+	  h: box_height
+      };
   }
   
   createPlayer(x, y, c1, c2, dir) {
@@ -72,11 +77,11 @@ class PlayerManager {
   }
 	
   moveLeft() {
-      const w = this.pill_sizes[this.player.dir].w;
+      const w = this.box_sizes.w;
       this.player.moveLeft(w);
   }
   moveRight() {
-      const w = this.pill_sizes[this.player.dir].w;
+      const w = this.box_sizes.w;
       this.player.moveRight(w);
   }
 	
