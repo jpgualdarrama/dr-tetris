@@ -97,7 +97,7 @@ class Board {
     tick() {
 	this.updateBlocks();
 	this.updatePlayer();
-	// this.removeLines();
+	this.removeLines();
 	if (BOARD_DEBUG.TICK) {
 	    debug("Board.tick before descend - grid")
 	    debug(this.grid)
@@ -272,17 +272,53 @@ class Board {
 	// 1. The pill is not marked static, and
 	// 2. If there is a pill in either of the two grid below
 	//    that is not the current pill and is not marked static
-	var pill_index_at_ij = this.grid.get(c, r).index;
-	var pill_exists_below_current_left = this.grid.cellContainsBox(c, r + 1);
-	var pill_exists_below_current_right = this.grid.cellContainsBox(c + 1, r + 1);
-	var pill_below_left_is_current = this.pillBelowIsCurrent(c, r);
-	var pill_below_right_is_current = this.pillBelowIsCurrent(c + 1, r);
-	var pill_below_left_is_static = this.pillBelowIsStatic(c, r);
-	var pill_below_right_is_static = this.pillBelowIsStatic(c + 1, r);
-	var pill_is_static = this.pill_manager.isStatic(pill_index_at_ij);
-	var left_box_can_descend = pill_exists_below_current_left && !pill_below_left_is_current && !pill_below_left_is_static;
-	var right_box_can_descend = pill_exists_below_current_right && !pill_below_right_is_current && !pill_below_right_is_static
-	return left_box_can_descend && right_box_can_descend && !pill_is_static;
+	var pill_index_at_CL = this.grid.get(c, r, 'index') // current_left
+	var pill_index_at_CR = this.grid.get(c+1, r, 'index') // current_right
+
+	var pill_exists_CL = (pill_index_at_CL > -1);
+	var pill_exists_CR = (pill_index_at_CR > -1);
+
+	var pill_CL_is_static = (pill_exists_CL) ? this.pill_manager.isStatic(pill_index_at_CL) : false;
+	var pill_CR_is_static = (pill_exists_CR) ? this.pill_manager.isStatic(pill_index_at_CR) : false;
+
+	var pill_exists_BL = this.grid.cellContainsBox(c, r + 1); // below left
+	var pill_exists_BR = this.grid.cellContainsBox(c + 1, r + 1); // below right
+	var pill_BL_is_static = this.pillBelowIsStatic(c, r);
+	var pill_BR_is_static = this.pillBelowIsStatic(c + 1, r);
+	
+	var pill_CR_same_as_CL = (pill_index_at_CL === pill_index_at_CR);
+	var pill_BL_same_as_CL = this.pillBelowIsCurrent(c, r);
+	var pill_BR_same_as_CR = this.pillBelowIsCurrent(c + 1, r);
+
+	var pill_can_descend = true;
+	if(pill_exists_CL && pill_CL_is_static) {
+	    pill_can_descend = false;
+	} else if(pill_exists_CR && pill_CR_is_static) {
+	    pill_can_descend = false;
+	} else if(pill_exists_CL && !pill_CL_is_static && pill_exists_BL && pill_BL_is_static) {
+	    pill_can_descend = false;
+	} else if(pill_exists_CR && pill_CR_same_as_CL && !pill_CR_is_static && pill_exists_BR &&
+		  pill_BR_is_static) {
+	    pill_can_descend = false;
+	}
+	return pill_can_descend;
+
+	/*
+	var left_box_can_descend = pill_exists_BL && !pill_BL_same_as_CL &&
+	    !pill_BL_is_static && (pill_index_at_CL != -1);
+	var right_box_can_descend = pill_exists_BR && !pill_BR_same_as_CR &&
+	    !pill_BR_is_static && (pill_index_at_CR != -1);
+
+	if(pill_exists_BL && pill_exists_BR) {
+	    return left_box_can_descend && right_box_can_descend && !pill_CL_is_static;
+	} else if(pill_exists_BL && !pill_exists_BR) {
+	    return left_box_can_descend && !pill_CL_is_static;
+	} else if(!pill_exists_BL && pill_exists_BR) {
+	    return right_box_can_descend && !pill_CL_is_static;
+	} else {
+	    return !pill_CL_is_static;
+	}
+	*/
     } // canHorizontalPillDescend
 
     canVerticalPillDescend(c, r) {
@@ -396,10 +432,15 @@ class Board {
 	    box2: (has_box2) ? box2.topLeft() : undefined
 	}
 
-	this.updateBoxLocationInGrid(new_grid, pill_index, BoxID.Box2,
-				     pill_boxes_old_positions.box1, pill_boxes_new_positions.box1)
-	this.updateBoxLocationInGrid(new_grid, pill_index, BoxID.Box1,
-				     pill_boxes_old_positions.box2, pill_boxes_new_positions.box2)
+	if(has_box1) {
+	    this.updateBoxLocationInGrid(new_grid, pill_index, BoxID.Box1,
+					 pill_boxes_old_positions.box1, pill_boxes_new_positions.box1)
+	}
+
+	if(has_box2) {
+	    this.updateBoxLocationInGrid(new_grid, pill_index, BoxID.Box2,
+					 pill_boxes_old_positions.box2, pill_boxes_new_positions.box2)
+	}
 
 	if (BOARD_DEBUG.DESCEND_BOARD_PILL) {
 	    debug("new_grid at the end of descendBoardPill")
@@ -491,18 +532,14 @@ class Board {
     // this method checks if there are any lines of 4 or more
     // blocks of the same color and clears them
     removeLines() {
-	// console.log("REMOVELINES")
-	// console.log(this.grid.data[1][19])
-
+	if (BOARD_DEBUG.REMOVE_LINES) {
+	    debug("Board.removeLines")
+	}
+	
 	// get all lines
 	var lines = this.grid.calculateLines();
 
-	// console.log("REMOVELINES1")
-	// console.log(this.grid.data[1][19])
-
 	if (BOARD_DEBUG.REMOVE_LINES) {
-	    debug("Board.removeLines")
-	    debug("lines - ")
 	    debug(lines)
 	}
 
@@ -535,7 +572,7 @@ class Board {
     // remove a single line
     removeLine(line) {
 	const box_indices = line.box_indices;
-	if (BOARD_DEBUG.REMOVE_LINES) {
+	if (BOARD_DEBUG.REMOVE_LINE) {
 	    debug("Removing the following grid entries")
 	    debug(box_indices)
 	}
@@ -545,32 +582,24 @@ class Board {
 	    const grid_r = box_indices[box_index].y
 	    const pill_index = this.grid.get(grid_c, grid_r, 'index')
 	    const box_id = this.grid.get(grid_c, grid_r, 'boxID')
-	    // console.log("RMVLN2")
-	    // console.log(this.grid.data[1][19])
-	    if (BOARD_DEBUG.REMOVE_LINES) {
+
+	    if (BOARD_DEBUG.REMOVE_LINE) {
 		debug("Box Index=", box_index,
 		      "[c=", grid_c, "][r=", grid_r,
 		      "], pill_index=", pill_index, ", box_id=", box_id)
 	    }
 
-	    // console.log("RMVLN3")
-	    // console.log(this.grid.data[1][19])
 	    this.grid.removeBox(grid_c, grid_r, this.pill_manager.isFlipped(pill_index), box_indices);
-	    // console.log("RMVLN3.1")
-	    // console.log(this.grid.data[1][19])
 	    this.pill_manager.removeBox(pill_index, box_id);
-	    // console.log("RMVLN3.2")
-	    // console.log(this.grid.data[1][19])
-	    this.descendPillBox(grid_c, grid_r, box_id, pill_index);
+	    // NOTE to self: I don't know why I was trying to descend a box after deleting it...
+	    // this.descendPillBox(grid_c, grid_r, box_id, pill_index);
 
-	    // console.log("RMVLN4")
 	    // if the pill has no boxes, remove it
 	    if(this.pill_manager.isEmpty(pill_index)) {
 		this.pill_manager.removePill(pill_index);
 		this.grid.removePillIndex(pill_index);
 	    }
 
-	    // console.log("RMVLN5")
 	} // for box_index
     } // removeLine
 

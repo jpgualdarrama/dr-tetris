@@ -323,6 +323,14 @@ class Grid {
     //    indices below the player, which is not part of the grid,
     //    so its direction cannot be looked up
     getPillIndicesBelow(c, r, dir) {
+	if(!this.validCell(c, r)) {
+	    if(GRID_DEBUG.GET_PILL_INDICES_BELOW) {
+		debug("Grid.getPillIndicesBelow(c=", c, ",r=", r,
+		      ") - [c=", c, "][r=", r, "] not a valid cell");
+	    }
+	    return [];
+	}
+	
 	if(dir === undefined) {
 	    dir = this.data[c][r].direction;
 	}
@@ -393,7 +401,7 @@ class Grid {
 		// only have to move Box 1 if Box 2 is below it
 	    } else if (box_id === BoxID.Box2 && !isFlipped) {
 		if (box_indices.find(e => (e.x === c && e.y === r - 1)) === undefined) {
-		    this.grid.descendBoxAt(c, r - 1);
+		    this.descendBoxAt(c, r - 1);
 		}
 	    } // else if
 	} // if/else if direction
