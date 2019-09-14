@@ -1,36 +1,36 @@
 // just a wrapper for an x-y pair without all the stuff in p5.Vector
 class XYPair {
     constructor(x, y) {
-	this.x = x;
-	this.y = y;
+        this.x = x;
+        this.y = y;
     }
 
     static create(x, y) {
-	return new XYPair(x, y);
+        return new XYPair(x, y);
     }
 }
 
 // just a wrapper for a grid entry
 class GridEntry {
     constructor(index, clr, boxID, direction) {
-	this.index = index;
-	this.color = clr;
-	this.boxID = boxID;
-	this.direction = direction;
+        this.index = index;
+        this.color = clr;
+        this.boxID = boxID;
+        this.direction = direction;
     }
 
     copy() {
-	return new GridEntry(this.index, this.color, this.boxID, this.direction);
+        return new GridEntry(this.index, this.color, this.boxID, this.direction);
     }
 
     static blank() {
-	return new GridEntry(-1, color(0, 0, 0), BoxID.BoxNA, Direction.Unknown);
+        return new GridEntry(-1, color(0, 0, 0), BoxID.BoxNA, Direction.Unknown);
     }
 
     static colorsMatch(ge1, ge2) {
-	return (ge1.color.toString('#rrggbb') === ge2.color.toString('#rrggbb'));
-	  /*return (ge1.index === ge2.index &&
-	    ge1.direction === ge2.direction);*/
+        return (ge1.color.toString('#rrggbb') === ge2.color.toString('#rrggbb'));
+          /*return (ge1.index === ge2.index &&
+            ge1.direction === ge2.direction);*/
     }
 }
 
@@ -38,58 +38,58 @@ class GridEntry {
 // stored in the grid. Make a class that encapsulates much of this behavior
 class Grid {
     constructor(x_divisions, y_divisions, x_width, y_height) {
-	this.divisions = {
-	    x: x_divisions,
-	    y: y_divisions
-	}
-	this.properties = {
-	    divisions: {
-		x: x_divisions,
-		y: y_divisions
-	    },
-	    sizes: {
-		x: x_width,
-		y: y_height
-	    }
-	}
-	this.data = [];
-	this.initializeData(x_divisions, y_divisions);
+        this.divisions = {
+            x: x_divisions,
+            y: y_divisions
+        }
+        this.properties = {
+            divisions: {
+                x: x_divisions,
+                y: y_divisions
+            },
+            sizes: {
+                x: x_width,
+                y: y_height
+            }
+        }
+        this.data = [];
+        this.initializeData(x_divisions, y_divisions);
     }
 
     static create(x_divisions, y_divisions, x_width, y_height) {
-	return new Grid(x_divisions, y_divisions, x_width, y_height);
+        return new Grid(x_divisions, y_divisions, x_width, y_height);
     }
 
     initializeData(x_divisions, y_divisions) {
-	this.data = [];
-	for (var i = 0; i < x_divisions; i++) {
-	    var tmp = [];
-	    for (var j = 0; j < y_divisions; j++) {
-		tmp.push(new GridEntry(-1, color(0, 0, 0), BoxID.BoxNA, Direction.Unknown));
-	    }
-	    this.data.push(tmp);
-	}
+        this.data = [];
+        for (var i = 0; i < x_divisions; i++) {
+            var tmp = [];
+            for (var j = 0; j < y_divisions; j++) {
+                tmp.push(new GridEntry(-1, color(0, 0, 0), BoxID.BoxNA, Direction.Unknown));
+            }
+            this.data.push(tmp);
+        }
     }
 
     validColumn(c) {
-	return (c >= 0 && c < this.divisions.x)
+        return (c >= 0 && c < this.divisions.x)
     }
 
     validRow(r) {
-	return (r >= 0 && r < this.divisions.y)
+        return (r >= 0 && r < this.divisions.y)
     }
 
     validCell(c, r) {
-	return this.validColumn(c) && this.validRow(r)
+        return this.validColumn(c) && this.validRow(r)
     }
 
     get(c, r, field) {
-	// console.log("GET(c=", c, ", r=", r, ", field=", field)
-	if (this.validCell(c, r)) {
-	    if(field !== undefined) {
-		// console.log(this.data[c][r])
-		return this.data[c][r][field];
-	    } else {
+        // console.log("GET(c=", c, ", r=", r, ", field=", field)
+        if (this.validCell(c, r)) {
+            if(field !== undefined) {
+                // console.log(this.data[c][r])
+                return this.data[c][r][field];
+            } else {
 		return this.data[c][r];
 	    }
 	} else {
@@ -394,15 +394,18 @@ class Grid {
 	} else if (dir === Direction.Vertical) {
 	    // only move Box 2 if it above Box 1
 	    if (box_id === BoxID.Box1 && isFlipped) {
+                /*
 		if (box_indices.find(e => (e.x === c && e.y === r - 1)) === undefined) {
 		    this.descendBoxAt(c, r - 1);
 		}
-		// }
-		// only have to move Box 1 if Box 2 is below it
+                */
+	    // only have to move Box 1 if Box 2 is below it
 	    } else if (box_id === BoxID.Box2 && !isFlipped) {
-		if (box_indices.find(e => (e.x === c && e.y === r - 1)) === undefined) {
-		    this.descendBoxAt(c, r - 1);
-		}
+                /*
+                if (box_indices.find(e => (e.x === c && e.y === r - 1)) === undefined) {
+                    this.descendBoxAt(c, r - 1);
+                }
+                */
 	    } // else if
 	} // if/else if direction
     } // removeBox

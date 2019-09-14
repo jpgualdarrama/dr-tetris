@@ -71,11 +71,11 @@ function setInitialPills() {
   board.addPill(0, 19, Direction.Horizontal,
     pill_colors[GREEN_INDEX],
     pill_colors[GREEN_INDEX])
-  board.addPill(0, 18, Direction.Horizontal,
-    pill_colors[GREEN_INDEX],
+  board.addPill(2, 18, Direction.Vertical,
+    pill_colors[RED_INDEX],
     pill_colors[GREEN_INDEX]);
-  board.addPill(1, 16, Direction.Vertical,
-    pill_colors[GREEN_INDEX],
+  board.addPill(3, 18, Direction.Vertical,
+    pill_colors[RED_INDEX],
     pill_colors[GREEN_INDEX]);
 }
 
