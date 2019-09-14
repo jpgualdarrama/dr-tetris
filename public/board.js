@@ -4,6 +4,7 @@ class Board {
 
     constructor(w, h, num_pills_x, num_pills_y) {
 	const floor_height = 10;
+	const SCORE_PREFIX = "Score: ";
 
 	this.width = w;
 	this.height = h - floor_height;
@@ -25,6 +26,10 @@ class Board {
 			      width, floor_height, color(0, 0, 0));
 	Body.setStatic(this.bottom.body, true);
 
+	this.score = 0;
+
+	this.score_para = createP('');
+	this.score_prefix = SCORE_PREFIX;
     }
 
     addPill(grid_i, grid_j, dir, c1, c2) {
@@ -555,6 +560,8 @@ class Board {
 
 		// remove the line from this.lines
 		lines.splice(i, 1);
+
+		this.addScore(box_indices.length - 3);
 	    } // if length >= 4
 	} // for each line
 
@@ -667,6 +674,11 @@ class Board {
 
     rotatePlayerCounterClockwise() {
 	this.player_manager.rotateCounterClockwise();
+    }
+
+    addScore(scoreIncrements) {
+	this.score += 10*scoreIncrements;
+	this.score_para.html(this.score_prefix + this.score);
     }
 
     reset() {

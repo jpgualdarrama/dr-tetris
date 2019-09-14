@@ -89,6 +89,16 @@ function createPlayer() {
 }
 
 function draw() {
+/*
+  if(keyIsDown(LEFT_ARROW)) {
+      this.board.movePlayerLeft();
+  } else if(keyIsDown(RIGHT_ARROW)) {
+      this.board.movePlayerRight();
+  } else if (keyIsDown(DOWN_ARROW)) {
+      this.board.descendPlayer();
+  }
+*/
+    
   background(220);
   if (PLAY && !draw_only) {
     update();
