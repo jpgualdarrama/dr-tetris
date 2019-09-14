@@ -68,15 +68,27 @@ function setup() {
 }
 
 function setInitialPills() {
-  board.addPill(0, 19, Direction.Horizontal,
-    pill_colors[GREEN_INDEX],
-    pill_colors[GREEN_INDEX])
-  board.addPill(2, 18, Direction.Vertical,
-    pill_colors[RED_INDEX],
-    pill_colors[GREEN_INDEX]);
-  board.addPill(3, 18, Direction.Vertical,
-    pill_colors[RED_INDEX],
-    pill_colors[GREEN_INDEX]);
+    board.addPill(9, 19, Direction.Horizontal,
+                  pill_colors[BLUE_INDEX],
+                  pill_colors[BLUE_INDEX]
+                 );
+    board.addPill(11, 19, Direction.Horizontal,
+                  pill_colors[BLUE_INDEX],
+                  pill_colors[BLUE_INDEX]
+                 );
+    board.addPill(10, 18, Direction.Horizontal,
+                  pill_colors[GREEN_INDEX],
+                  pill_colors[RED_INDEX]
+                 );
+    board.addPill(10, 17, Direction.Horizontal,
+                  pill_colors[GREEN_INDEX],
+                  pill_colors[RED_INDEX]
+                 );
+    board.addPill(11, 15, Direction.Vertical,
+                  pill_colors[RED_INDEX],
+                  pill_colors[RED_INDEX]
+                 );
+    
 }
 
 function createPlayer() {

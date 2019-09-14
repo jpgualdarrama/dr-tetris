@@ -61,6 +61,10 @@ class PillManager {
 	    this.getBox(pill_index, BoxID.Box2) === undefined;
     }
 
+    setStatic(pill_index, stat) {
+        this.pills[pill_index].setStatic(stat);
+    }
+
     getDir(pill_index) {
 	return this.pills[pill_index].dir;
     }

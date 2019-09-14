@@ -219,6 +219,7 @@ class Board {
                     debug("SET_STATIC_BLOCKS = PILL STATIC STATE BEFORE IF AT BOTTOM=",
                           this.pill_manager.getPill(pill_index_at_ij).isStatic());
                 }
+                this.pill_manager.setStatic(pill_index_at_ij, false);
                 this.setStaticStateIfAtBottom(this.pill_manager.getPill(pill_index_at_ij));
                 if(BOARD_DEBUG.SET_STATIC_STATE_FOR_BLOCKS) {
                     debug("SET_STATIC_BLOCKS = PILL STATIC STATE AFTER IF AT BOTTOM=",
